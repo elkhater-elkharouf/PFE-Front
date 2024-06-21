@@ -1,0 +1,24 @@
+@import '@core/scss/angular/libs/flatpickr.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/base/pages/app-user.scss';
+.custom-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .step {
+    width: 100px; /* Ajustez la largeur en fonction de vos besoins */
+    height: 50px; /* Ajustez la hauteur en fonction de vos besoins */
+    background-color: #e0e0e0; /* Couleur de fond */
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000; /* Couleur du texte */
+  }
+  
+  .step.active {
+    background-color: #2196f3; /* Couleur de fond lorsque l'étape est active */
+    color: #fff; /* Couleur du texte lorsque l'étape est active */
+  }

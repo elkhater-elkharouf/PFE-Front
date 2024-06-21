@@ -1,0 +1,94 @@
+<div class="card rounded-0">
+    <div class="card-header rounded-0">Ajouter Mail</div>
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full row">
+        <div class="my-3 col-md-6">
+          <label class="form-label" for="username">Username</label>
+          <input
+            class="form-control"
+            id="username"
+            formControlName="username"
+            placeholder="username"
+          />
+          <div
+            *ngIf="
+              form.controls.username.errors?.required &&
+              form.controls.username.touched
+            "
+            class="text-danger text-xs mt-2"
+          >
+            USername is required
+          </div>
+        </div>
+        <div class="my-3 col-md-3">
+          <label class="form-label" for="password">Password</label>
+          <input
+            type="text"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            placeholder="password"
+          />
+          <div
+            *ngIf="
+              form.controls.password.errors?.required &&
+              form.controls.password.touched
+            "
+            class="text-danger text-xs mt-2"
+          >
+          password is required
+          </div>
+        </div>
+        <div class="my-3 col-md-3">
+          <label class="form-label" for="port">port</label>
+          <input
+            type="number"
+            class="form-control"
+            id="port"
+            formControlName="port"
+            placeholder="port"
+          />
+          <div
+            *ngIf="
+              form.controls.port.errors?.required &&
+              form.controls.port.touched
+            "
+            class="text-danger text-xs mt-2"
+          >
+          port is required
+          </div>
+        </div>
+        <div class="my-3 col-md-3">
+            <label class="form-label" for="port">host</label>
+            <input
+              type="text"
+              class="form-control"
+              id="host"
+              formControlName="host"
+              placeholder="host"
+            />
+            <div
+              *ngIf="
+                form.controls.host.errors?.required &&
+                form.controls.host.touched
+              "
+              class="text-danger text-xs mt-2"
+            >
+            host is required
+            </div>
+          </div>
+      
+      
+        <div>
+          <button
+            type="submit"
+            class="btn btn-primary w-full"
+            [disabled]="!form.valid"
+          >
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

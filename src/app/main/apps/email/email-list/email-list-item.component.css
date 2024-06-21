@@ -1,0 +1,43 @@
+
+.khater input:focus {
+    outline: none !important;
+    background: none;
+    border: none;
+
+
+}
+pre {
+    background-color: white;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+.modal-content {
+    overflow-x: auto; /* Activer le défilement horizontal si nécessaire */
+    overflow-y: auto; /* Activer le défilement vertical si nécessaire */
+    max-height: 80vh; /* Hauteur maximale pour le défilement vertical */
+}
+
+.modal-body {
+    overflow: auto; /* Activer le défilement dans le corps du modal */
+}
+.modal-lg {
+    max-width: 80% !important;
+  }
+  
+  .table-striped {
+    width: 100%;
+  }
+  
+  .table {
+    width: 100%;
+  }
+  
+  button {
+    margin: 10px 0;
+  }
+  .btn-custom {
+    width: 150px; /* Ajustez la largeur selon vos besoins */
+    margin-right: 10px; /* Ajoutez un espace entre les boutons */
+  }

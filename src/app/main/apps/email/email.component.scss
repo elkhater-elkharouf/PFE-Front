@@ -1,0 +1,77 @@
+@import '@core/scss/base/pages/app-email';
+@import '@core/scss/angular/libs/select.component';
+@import '@core/scss/angular/libs/quill-editor.component';
+@import '@core/scss/base/components/_include'; // Components includes
+
+// Email Application
+.email-application {
+  //  ng Select
+  .ng-select {
+    .ng-select-container {
+      border: none;
+    }
+  }
+  //  quill editor
+  .ql-container {
+    .ql-snow {
+      border: none;
+    }
+  }
+  .modal {
+    animation: none !important;
+  }
+
+  .email-app-list {
+    height: 100% !important;
+  }
+
+  .email-media-list {
+    email-list-item {
+      &:not(:first-child) {
+        li {
+          border-top: 1px solid $border-color;
+        }
+      }
+    }
+  }
+
+  input {
+    &[type='checkbox'] {
+      z-index: 1;
+    }
+  }
+
+  .compose-mail-form-field {
+    .form-group {
+      margin-bottom: 0;
+    }
+    .ng-select-focused {
+      box-shadow: none;
+    }
+  }
+}
+
+// Dark Layout
+.dark-layout {
+  .ng-select-container {
+    background-color: $theme-dark-input-bg;
+  }
+}
+
+.dropdown-menu li {
+  position: relative;
+  }
+  .dropdown-menu .dropdown-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: -7px;
+  }
+  .dropdown-menu .dropdown-submenu-left {
+  right: 100%;
+  left: auto;
+  }
+  .dropdown-menu > li:hover > .dropdown-submenu {
+  display: block;
+  }
+  

@@ -1,0 +1,176 @@
+<div class="slideout-content">
+  <div
+    class="modalsd modal-slide-in sdfade new-user-modal"
+    id="modals-slide-in"
+  >
+    <div class="modal-dialog">
+      <form
+        class="add-new-user modal-content pt-0"
+        [formGroup]="userForm"
+        (ngSubmit)="submit()"
+        #newUserForm="ngForm"
+      >
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="toggleSidebar('new-user-sidebar')"
+        >
+          ×
+        </button>
+        <div class="modal-header mb-1">
+          <h5 class="modal-title" id="exampleModalLabel">New User</h5>
+        </div>
+        <div class="modal-body flex-grow-1">
+          <div
+            class="d-flex justify-content-center align-items-center flex-column"
+          >
+            <img
+              class="user-avatar users-avatar-shadow rounded mr-2 my-25 cursor-pointer"
+              [src]="
+                avatarImage ||
+                'https://t3.ftcdn.net/jpg/05/53/79/60/360_F_553796090_XHrE6R9jwmBJUMo9HKl41hyHJ5gqt9oz.jpg'
+              "
+              height="50"
+              width="70"
+              alt="User avatar"
+              (click)="fileInput.click()"
+            />
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              accept="image/png, image/jpeg, image/jpg"
+              (change)="uploadImage($event)"
+            />
+
+            <div class="d-flex mt-1 px-0">
+              <label
+                class="btn btn-primary btn-sm mb-0 mr-2"
+                for="change-picture"
+              >
+                <span class="d-none d-sm-block">Change</span>
+                <input
+                  type="file"
+                  id="change-picture"
+                  (change)="uploadImage($event)"
+                  hidden
+                  accept="image/png, image/jpeg, image/jpg"
+                />
+
+                <span class="d-block d-sm-none">
+                  <i class="mr-0" data-feather="edit"></i>
+                </span>
+              </label>
+              <button
+                type="button"
+                class="btn btn-outline-secondary d-none d-sm-block btn-sm"
+                rippleEffect
+              >
+                Remove
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary d-block d-sm-none"
+              >
+                <i class="mr-0" data-feather="trash-2"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="basic-icon-default-fullname">Last Name</label>
+            <input
+              type="text"
+              formControlName="lname"
+              class="form-control"
+              placeholder="John Doe"
+              required
+            />
+            <div
+              *ngIf="
+                userForm.get('lname').errors?.required &&
+                userForm.get('lname').touched
+              "
+              class="text-danger"
+            >
+              Last Name is required!
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="basic-icon-default-uname">First Name</label>
+            <input
+              type="text"
+              formControlName="fname"
+              class="form-control"
+              placeholder="Web Developer"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="basic-icon-default-email">Email</label>
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control"
+              placeholder="john.doe@example.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="basic-icon-default-department">Department</label>
+            <input
+              type="text"
+              formControlName="department"
+              class="form-control"
+              placeholder="enter your department"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="basic-icon-default-password">Password</label>
+            <input
+              type="password"
+              formControlName="password"
+              class="form-control"
+              placeholder="********"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="user-role">Privileges</label>
+            <ng-select
+              [items]="privileges"
+              formControlName="privileges"
+              bindLabel="privilegeName"
+              bindValue="idPrivilege"
+              [multiple]="true"
+            >
+            </ng-select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="user-role">User Role</label>
+            <select id="user-role" class="form-control" formControlName="role">
+              <option value="Subscriber">Subscriber</option>
+              <option value="Editor">Editor</option>
+              <option value="Maintainer">Maintainer</option>
+              <option value="Author">Author</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary mr-1">Submit</button>
+          <button
+            type="reset"
+            class="btn btn-outline-secondary"
+            (click)="toggleSidebar('new-user-sidebar')"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modal to add new user Ends-->
+</div>

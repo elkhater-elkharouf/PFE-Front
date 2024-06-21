@@ -1,0 +1,466 @@
+<div class="content-wrapper container-xxl p-0">
+  <app-content-header [contentHeader]="contentHeader"></app-content-header>
+  <div class="content-body">
+    <div class="bs-stepper checkout-tab-steps" id="checkoutStepper">
+      <!-- Wizard starts -->
+      <div class="bs-stepper-header">
+        <div class="step" data-target="#step-cart">
+          <button type="button" class="step-trigger">
+            <span class="bs-stepper-box">
+              <i [data-feather]="'check-square'" class="font-medium-3"></i>
+            </span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Project</span>
+              <span class="bs-stepper-subtitle">Your Project Details</span>
+            </span>
+          </button>
+        </div>
+        <div class="line">
+          <i data-feather="chevron-right" class="font-medium-2"></i>
+        </div>
+        <div class="step" data-target="#step-address">
+          <button type="button" class="step-trigger">
+            <span class="bs-stepper-box">
+              <i [data-feather]="'mail'" class="font-medium-3"></i>
+            </span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Email</span>
+              <span class="bs-stepper-subtitle">Enter Your Email config</span>
+            </span>
+          </button>
+        </div>
+        <div class="line">
+          <i data-feather="chevron-right" class="font-medium-2"></i>
+        </div>
+        <div class="step" data-target="#step-payment">
+          <button type="button" class="step-trigger">
+            <span class="bs-stepper-box">
+              
+              <i [data-feather]="'users'" class="font-medium-3"></i>
+            </span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">User</span>
+              <span class="bs-stepper-subtitle">Select User's Project</span>
+            </span>
+          </button>
+        </div>
+      </div>
+      <!-- Wizard ends -->
+
+      <div class="bs-stepper-content">
+        <!-- Checkout Place order starts -->
+        <div id="step-cart" class="content" >
+          <div id="place-order" class="list-view product-checkout">
+            <!-- Checkout Place Order Left starts -->
+        
+         
+          <form class="form form-vertical" [formGroup]="projetForm" >
+              <div class="card">
+               <div class="card-header flex-column align-items-start">
+                 <h4 class="card-title">Add New Project</h4>
+                   <p class="card-text text-muted mt-25">
+                       Be sure to check "Your Project" when you have finished
+                           </p>
+                  </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group mb-2">
+            <label for="nameProjet">Project Name:</label>
+            <input
+              type="text"
+              id="nameProjet"
+              name="nameProjet"
+              class="form-control"
+              formControlName="nameProjet"
+              placeholder="John Doe"
+              required
+            />
+            <span
+          *ngIf="projetForm.get('nameProjet').invalid && projetForm.get('nameProjet').touched"
+          class="invalid-form"
+        >
+          <small class="form-text text-danger" *ngIf="projetForm.get('nameProjet').errors?.required"
+            >This field is required!</small
+          >
+        </span>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group mb-2">
+            <label for="status">Status:</label>
+            <select class="form-control" id="status" name="status" formControlName="status" placeholder="shosse status of project" required>
+              <option [ngValue]="0">En Cours</option>
+              <option [ngValue]="1">Pas Encore</option>
+              <option [ngValue]="2">Terminé</option>
+            </select>
+            <span
+          *ngIf="projetForm.get('status').invalid && projetForm.get('status').touched"
+          class="invalid-form"
+        >
+          <small class="form-text text-danger" *ngIf="projetForm.get('status').errors?.required"
+            >This field is required!</small
+          >
+        </span>      
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group mb-2">
+            <label for="dateDeb">Start Date:</label>
+           
+              <div class="form-group">
+                <div class="input-group">
+                  <input
+                         type="date" 
+                         id="dateDeb"
+                         name="dateDeb"
+                         class="form-control" 
+                         placeholder="yyyy-mm-dd" 
+                         formControlName="dateDeb"/>
+                    
+                  <div class="input-group-append">
+                    
+                  </div>
+                </div>
+              </div>
+   
+              <span
+          *ngIf="projetForm.get('dateDeb').invalid && projetForm.get('dateDeb').touched"
+          class="invalid-form"
+        >
+          <small class="form-text text-danger" *ngIf="projetForm.get('dateDeb').errors?.required"
+            >This field is required!</small
+          >
+        </span>
+              
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="form-group mb-2">
+            <label for="dateFin">End Date:</label>
+           
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="date" 
+                  id="dateFin"
+                  name="dateFin"
+                  class="form-control" 
+                  placeholder="yyyy-mm-dd" 
+                  formControlName="dateFin"  />
+                  <div class="input-group-append">
+                  </div>
+                </div>
+              </div>
+              <span
+              *ngIf="projetForm.get('dateFin').invalid && projetForm.get('dateFin').touched"
+              class="invalid-form"
+            >
+              <small class="form-text text-danger" *ngIf="projetForm.get('dateFin').errors?.required"
+                >This field is required!</small
+              >
+            </span>
+          </div>
+        </div>
+       
+
+        <div class="col-12">
+          <button type="reset"  rippleEffect class="btn btn-outline-secondary mr-1">Reset</button>
+          <button type="submit" (click)="nextStep()" rippleEffect class="btn btn-primary mr-1">Next</button>                   
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+  
+            
+           
+            <!-- Checkout Place Order Left ends -->
+
+            <!-- Checkout Place Order Right starts -->
+            
+          </div>
+          <!-- Checkout Place order Ends -->
+        </div>
+        <!-- Checkout Customer Address Starts -->
+        <div id="step-address" class="content" >
+          <form
+            id="checkout-address"
+            class="list-view product-checkout"
+            [formGroup]="addressForm"
+            (ngSubmit)="validateNextStep(addressForm)"
+          >
+            <!-- Checkout Customer Address Left starts -->
+            <div class="card">
+              <div class="card-header flex-column align-items-start">
+                <h4 class="card-title">Add New Email</h4>
+                <p class="card-text text-muted mt-25">
+                  Be sure to check "Your Email" when you have finished
+                </p>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group mb-2">
+                      <label for="username">Username:</label>
+                      <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      class="form-control"
+                      formControlName="username"
+                      placeholder="John Doe"
+                      />
+                      <span
+                      *ngIf="addressForm.get('username').invalid && addressForm.get('username').touched"
+                      class="invalid-form"
+                    >
+                      <small class="form-text text-danger" *ngIf="addressForm.get('username').errors?.required"
+                        >This field is required!</small
+                      >
+                    </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group mb-2">
+                      <label for="host">Host:</label>
+                      <input
+                        type="text"
+                        id="host"
+                        name="host"
+                        class="form-control"
+                        formControlName="host"
+                        placeholder="smtp.gmail.com"
+                       
+                        required
+                      />
+                      <span
+                      *ngIf="addressForm.get('host').invalid && addressForm.get('host').touched"
+                      class="invalid-form"
+                    >
+                      <small class="form-text text-danger" *ngIf="addressForm.get('host').errors?.required"
+                        >This field is required!</small
+                      >
+                    </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group mb-2">
+                      <label for="password">Password:</label>
+                      <input type="password" 
+                            id="password" 
+                            class="form-control" 
+                            name="password"
+                            formControlName="password" 
+                            placeholder="••••••••"
+                            required />
+                            <span
+                            *ngIf="addressForm.get('password').invalid && addressForm.get('password').touched"
+                            class="invalid-form"
+                          >
+                            <small class="form-text text-danger" *ngIf="addressForm.get('password').errors?.required"
+                              >This field is required!</small
+                            >
+                          </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group mb-2">
+                      <label for="port">Port:</label>
+                  <input type="number" 
+                         id="port" 
+                         class="form-control" 
+                         name="port"
+                         formControlName="port" 
+                         placeholder="587"
+                         required />
+                         <span
+                         *ngIf="addressForm.get('port').invalid && addressForm.get('port').touched"
+                         class="invalid-form"
+                       >
+                         <small class="form-text text-danger" *ngIf="addressForm.get('port').errors?.required"
+                           >This field is required!</small
+                         >
+                       </span>
+                    </div>
+                  </div>
+                 
+                  <div class="col-12">
+                    <button type="reset"  rippleEffect class="btn btn-outline-secondary mr-1">Reset</button>
+                    <button type="submit" (click)="validateNextStep(addressForm)" rippleEffect class="btn btn-primary mr-1">Next</button>                   
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Checkout Customer Address Left ends -->
+            <!-- Checkout Customer Address Right ends -->
+          </form>
+        </div>
+        <!-- Checkout Customer Address Ends -->
+
+
+
+        <!-- Checkout Payment Starts -->
+        <div id="step-payment" class="content">
+          <form id="checkout-payment" class="list-view product-checkout" [formGroup]="userForm" (ngSubmit)="submit()">
+            <div class="payment-type">
+              <div class="card">
+                <div class="card-header flex-column align-items-start">
+                  <h4 class="card-title">List of Users</h4>
+                  <p class="card-text text-muted mt-25">Be sure to click on correct user </p>
+                </div>
+                <div class="card-body">
+                
+                  <!-- <ul>
+                    Utiliser *ngFor pour parcourir les utilisateurs sélectionnés 
+                    <li *ngFor="let user of users">{{ user.fname }} {{ user.lname }}</li>
+                  </ul> -->
+                  
+              <!--  <app-user-list ></app-user-list> -->
+        
+                 
+
+
+
+
+              <div class="row">
+                <div class="col-12 mb-50">
+                 <!--  <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right mr-1" rippleEffect
+                    >Export CSV</a
+                  > -->
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="d-flex justify-content-between align-items-center m-1">
+                    <label class="d-flex align-items-center"
+                      >Show
+                      <select class="form-control mx-25"  [value]="basicSelectedOption" (change)="onChange($event.target.value)">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                      entries</label
+                    >
+                  </div>
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                  <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                    <label class="d-flex align-items-center"
+                      >Search
+                      <input
+                      formControlName="searchValue" type="search" placeholder="Search" class="form-control ml-25"
+                      (keyup)="filterUpdate($event)"
+                      (search)="filterUpdate($event)"
+                    />
+                  </label>
+                  </div>
+                </div>
+              </div>
+    
+              <table #myTable class="table">
+                <thead>
+                  <tr>
+                    
+                    <th><input type="checkbox"   (change)="toggleAllSelections($event)"></th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Enabled</th>
+                    <th>Departement</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of users">
+                     <td><input type="checkbox" formArrayName="selectedUsers" (change)="toggleUserSelection(user)"></td>
+                    <td class="d-flex align-items-center">
+                      
+                      <div *ngIf="user.image && user.image.imagenUrl; else customAvatar">
+                        <img
+                          class="rounded-circle mr-1"
+                          [src]="user.image.imagenUrl"
+                          height="32"
+                          width="32"
+                          alt="datatable-avatar"
+                        />
+                      </div>
+                      <ng-template #customAvatar>
+                        <div
+                          class="avatar mr-1 ml-0"
+                          [ngClass]="{
+                            'bg-light-success': user.enabled,
+                            'bg-light-secondary': !user.enabled
+                          }"
+                        >
+                          <div class="avatar-content">{{ user.fname | initials }}</div>
+                        </div>
+                      </ng-template>
+                      {{ user.fname }}_{{ user.lname }}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    
+                    <td >
+                      <div class="d-flex align-items-center">
+                      
+                        <i
+                          class="feather font-medium-3 mr-1"
+                          [ngClass]="{
+                            'icon-edit-2 text-info': user.role.roleName === 'Editor',
+                            'icon-settings text-warning': user.role.roleName === 'Author',
+                            'icon-database text-success': user.role.roleName === 'Maintainer',
+                            'icon-user text-primary': user.role.roleName === 'Subscriber',
+                            'icon-slack text-danger': user.role.roleName === 'admin'
+                          }"
+                        ></i>
+                        {{ user.role.roleName }}
+                      </div>
+                    </td>
+                    
+                    
+                    <td >
+                      <div class="badge badge-pill"
+                        [ngClass]="{
+                          'badge-light-success': user.enabled,
+                          'badge-light-secondary': !user.enabled
+                        }"
+                      >
+                        {{ user.enabled ? 'active' : 'inactive' }}
+                      </div>
+                    </td>
+                    <td>{{ user.department }}</td>
+                    <td>
+                      <div ngbDropdown container="body">
+                        <a
+                          ngbDropdownToggle
+                          href="javascript:void(0);"
+                          class="hide-arrow"
+                          id="dropdownBrowserState"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i data-feather="more-vertical" class="text-primary cursor-pointer mr-50"></i>
+                        </a>
+                        <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
+                          <a routerLink="/apps/user/user-view/{{ user.idUser }}" href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"
+                            ><i data-feather="file-text" class="mr-50"></i> Details</a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+    
+              <button type="submit" rippleEffect class="btn btn-primary mr-1" onclick="window.location.href = 'apps/e-commerce/wishlist';">Submit</button>
+                </div>
+              </div>
+            </div>
+           
+          </form>
+        </div>
+        <!-- Checkout Payment Ends -->
+      </div>
+    </div>
+  </div>
+</div>
+
