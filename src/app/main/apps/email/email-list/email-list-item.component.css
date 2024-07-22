@@ -6,6 +6,25 @@
 
 
 }
+.gg {
+  /* box-shadow: none; */
+  font-weight: 500;
+  margin-top: 73px;
+}
+
+
+
+.align-right {
+  position: absolute;
+  right: 0;
+}
+.buttons-container {
+  margin-top: auto; /* Pousse le conteneur vers le bas */
+  padding: 10px; /* Optionnel : ajoute un peu de padding autour des boutons */
+}
+.bb{
+    margin-left: 22px;
+}
 pre {
     background-color: white;
     color: white;
@@ -29,7 +48,11 @@ pre {
   .table-striped {
     width: 100%;
   }
-  
+  table {
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
   .table {
     width: 100%;
   }
@@ -40,4 +63,10 @@ pre {
   .btn-custom {
     width: 150px; /* Ajustez la largeur selon vos besoins */
     margin-right: 10px; /* Ajoutez un espace entre les boutons */
+  }
+/*   .content {
+    width: 100%;
+  } */
+  .ps{
+    width: 100% !important;
   }

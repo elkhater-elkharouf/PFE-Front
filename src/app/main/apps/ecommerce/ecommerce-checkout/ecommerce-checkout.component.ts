@@ -29,6 +29,7 @@ import * as $ from 'jquery';
 export class EcommerceCheckoutComponent implements OnInit {
  // @ViewChild(DatatableComponent) table: DatatableComponent;
  @ViewChild('myTable') table: any;
+  public loading = true ;
   private _unsubscribeAll: Subject<any> = new Subject();
   public exportCSVData: any[] = [];
   public projetForm : FormGroup;
@@ -156,9 +157,14 @@ export class EcommerceCheckoutComponent implements OnInit {
   }
 
   fetchUsers(): void {
+    console.log("aaaaa")
+    this.loading=true ; 
     this._userService.getUsers().subscribe(
+      
       (data: any) => {
+      console.log("data" ,data)
         this.users = data
+        this.loading=false ; 
       },
       (error) => console.error("Error fetching users", error)
     );
@@ -253,7 +259,7 @@ filterUpdate(event) {
       this.exportCSVData = this.rows;
     });
     this.initializeForm();
-    this.fetchUsers();
+    //this.fetchUsers();
 
     this.checkoutStepper = new Stepper(document.querySelector('#checkoutStepper'), {
       linear: false,

@@ -39,8 +39,16 @@ export class UserService {
     formData.append("updatedExcelData", JSON.stringify(excelData));
     return this.http.post(`/USER-SERVICE/export/${fileType}`, formData);
   }
-
-
+  getUsersByStatus(enabled: boolean): Observable<User[]> {
+    return this.http.get<User[]>(`/USER-SERVICE/getUserByStatus/${enabled}`);
+  }
+  getUsersByDepartment(department: string): Observable<any[]> {
+    return this.http.get<any[]>(`/USER-SERVICE/getuserbyDep/${department}`);
+  }
+  getUsersByRole(roleName: string): Observable<User[]> {
+    const url = `/USER-SERVICE/getUserByRole?roleName=${roleName}`;
+    return this.http.get<User[]>(url);
+  }
   getUsers(): Observable<User[]> {
     //return this.list
     console.log(this.httpOptions)
@@ -70,6 +78,8 @@ export class UserService {
   getPrivileges() {
     return this.http.get("/USER-SERVICE/AllPrivileges");
   }
+  addTemplate(template: any): Observable<any> {
+    return this.http.post("/USER-SERVICE/addTemplate", template);}
 
   getUserFromToken(accessToken: string): Observable<any> {
     const headers = new HttpHeaders({
@@ -79,7 +89,7 @@ export class UserService {
     return this.http.get("/USER-SERVICE/currentUser", { headers });
   }
 
-  exportFileFromExcel(formData: FormData, fileType: string) {
+  exportFileFromExcel(formData: FormData, fileType: string,templateLabel?: string) {
     console.log(fileType);
     let endpoint = "";
     if (fileType === "word") {
@@ -91,6 +101,16 @@ export class UserService {
     return this.http.post(endpoint, formData);
   }
 
+  getProjectsByUser(idUser: number): Observable<Projet[]> {
+    return this.http.get<Projet[]>(`/USER-SERVICE/getProjectByUser/${idUser}`);
+  }
+  sendHtmlTemplate(formData: FormData, templateLabel: string): Observable<any> {
+    const params = new HttpParams().set('templateLabel', templateLabel);
+    return this.http.post('/USER-SERVICE/export/email/from/excel', formData, { params });
+}
+sendSms(formData: FormData): Observable<any> {
+  return this.http.post(`/USER-SERVICE/send`, formData);
+}
   getByName() {
     return this.http.get("/USER-SERVICE/username");
   }
@@ -155,5 +175,10 @@ export class UserService {
     const formData = new FormData();
     formData.append("file", file);
     return this.http.post(url, formData);
+  }
+  changePassword(userId: number, oldPassword: string, newPassword: string, retypeNewPassword: string): Observable<any> {
+    const url = `/USER-SERVICE/changePassword/${userId}`;
+    const params = { oldPassword, newPassword, retypeNewPassword };
+    return this.http.post(url, null, { params });
   }
 }

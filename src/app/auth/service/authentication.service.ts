@@ -24,8 +24,8 @@ export class AuthenticationService {
    * @param {HttpClient} _http
    * @param {ToastrService} _toastrService
    */
-  constructor(private _http: HttpClient, private _toastrService: ToastrService, 
-    private userService : UserService) {
+  constructor(private _http: HttpClient, private _toastrService: ToastrService,
+    private userService: UserService) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -39,14 +39,14 @@ export class AuthenticationService {
    *  Confirms if user is admin
    */
   get isAdmin() {
-    return this.currentUserSubject.value && this.currentUserSubject.value.role && this.currentUserSubject.value.role.roleName=='admin';
+    return this.currentUserSubject.value && this.currentUserSubject.value.role && this.currentUserSubject.value.role.roleName == 'admin';
   }
 
   /**
    *  Confirms if user is client
    */
   get isClient() {
-    return this.currentUserSubject.value && this.currentUserSubject.value.role && this.currentUserSubject.value.role.roleName=='client';
+    return this.currentUserSubject.value && this.currentUserSubject.value.role && this.currentUserSubject.value.role.roleName == 'client';
   }
 
   /**
@@ -59,17 +59,17 @@ export class AuthenticationService {
 
 
   login(userObj: User) {
-    
+
     return this._http
-      .post<any>(`/USER-SERVICE/login`,userObj)
+      .post<any>(`/USER-SERVICE/login`, userObj)
       .pipe(
         map(user => {
           // login successful if there's a jwt token in the response
-          if (user ) {
-           //localStorage.setItem('accessToken',user.token);
+          if (user) {
+            //localStorage.setItem('accessToken',user.token);
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
-           
+
 
             //this.currentUser = JSON.parse(localStorage.getItem('currentUser')).user;
             // Display welcome toast!
@@ -77,21 +77,30 @@ export class AuthenticationService {
               this._toastrService.success(
 
                 'You have successfully logged in as an ' +
-                  user.role +
-                  ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
-                '👋 Welcome, ' +  user.user.fname+ '!',
+                user.role +
+                ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
+                '👋 Welcome, ' + user.user.fname + '!',
                 { toastClass: 'toast ngx-toastr', closeButton: true }
               );
             }, 2500);
 
             // notify
             this.currentUserSubject.next(user);
-            
+
           }
 
           return user;
         })
       );
+  }
+  updateCurrentUser(user: User) {
+    const oldUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    localStorage.setItem('currentUser', JSON.stringify({
+      ...oldUser, user
+    }));
+
+    this.currentUserSubject.next(user);
   }
 
   /**

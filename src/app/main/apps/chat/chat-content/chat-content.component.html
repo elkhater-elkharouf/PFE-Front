@@ -23,17 +23,17 @@
             class="btn avatar avatar-border user-profile-toggle bg-transparent m-0 mr-1 p-0"
             (click)="toggleSidebar('chat-active-sidebar')"
           >
-            <img [src]="chatUser.avatar" alt="avatar" height="36" width="36" />
+            <img [src]="chatUser?.avatar" alt="avatar" height="36" width="36" />
             <span
               [ngClass]="{
-                'avatar-status-offline': chatUser.status == 'offline',
-                'avatar-status-online': chatUser.status == 'online',
-                'avatar-status-busy': chatUser.status == 'busy',
-                'avatar-status-away': chatUser.status == 'away'
+                'avatar-status-offline': chatUser?.status === 'offline',
+                'avatar-status-online': chatUser?.status === 'online',
+                'avatar-status-busy': chatUser?.status === 'busy',
+                'avatar-status-away': chatUser?.status === 'away'
               }"
             ></span>
           </button>
-          <h6 class="mb-0">{{ chatUser.fullName }}</h6>
+          <h6 class="mb-0">{{ chatUser?.fullName }}</h6>
         </div>
         <div class="d-flex align-items-center">
           <i data-feather="phone-call" class="cursor-pointer d-sm-block d-none font-medium-2 mr-1"></i>
@@ -66,21 +66,19 @@
     <div class="user-chats" [perfectScrollbar] #scrollMe [scrollTop]="scrolltop">
       <div class="chats">
         <div
-          class="chat"
-          *ngFor="let chatRef of chats.chat"
-          [ngClass]="{ 'chat-left': chatRef.senderId === chats.userId }"
+        *ngFor="let user of users"
         >
           <div class="chat-avatar">
             <span class="avatar box-shadow-1 cursor-pointer">
               <img
-                *ngIf="chatRef.senderId === chats.userId; else alternateAvatar"
-                [src]="chatUser.avatar"
+                *ngIf="currentUser.idUser === user.idUser else alternateAvatar"
+                [src]="user.image.imagenUrl"
                 alt="avatar"
                 height="36"
                 width="36"
               />
               <ng-template #alternateAvatar>
-                <img [src]="userProfile.avatar" alt="avatar" height="36" width="36" />
+                <img [src]="user.image.imagenUrl" alt="avatar" height="36" width="36" />
               </ng-template>
             </span>
           </div>
@@ -90,12 +88,12 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     </div>
     <!-- User Chat messages -->
 
     <!-- Submit Chat form -->
-    <form class="chat-app-form" action="javascript:void(0);">
+    <form class="chat-app-form" (ngSubmit)="updateChat()">
       <div class="input-group input-group-merge mr-1 form-send-message">
         <div class="input-group-prepend">
           <span class="speech-to-text input-group-text"><i data-feather="mic" class="cursor-pointer"></i></span>
@@ -116,7 +114,7 @@
           ></span>
         </div>
       </div>
-      <button type="button" class="btn btn-primary send" (click)="updateChat()" rippleEffect>
+      <button type="submit" class="btn btn-primary send" rippleEffect>
         <i data-feather="send" class="d-lg-none"></i>
         <span class="d-none d-lg-block">Send</span>
       </button>

@@ -2,6 +2,8 @@
 @import '@core/scss/angular/libs/select.component';
 @import '@core/scss/angular/libs/quill-editor.component';
 @import '@core/scss/base/components/_include'; // Components includes
+@import '@core/scss/angular/libs/form-wizard.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
 
 // Email Application
 .email-application {
@@ -74,4 +76,3 @@
   .dropdown-menu > li:hover > .dropdown-submenu {
   display: block;
   }
-  

@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit, ElementRef, Renderer2 } from '@an
 import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 
-import { Subject } from 'rxjs';
+import { Subject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import * as Waves from 'node-waves';
@@ -18,6 +18,8 @@ import { locale as menuEnglish } from 'app/menu/i18n/en';
 import { locale as menuFrench } from 'app/menu/i18n/fr';
 import { locale as menuGerman } from 'app/menu/i18n/de';
 import { locale as menuPortuguese } from 'app/menu/i18n/pt';
+import{getMessaging , getToken, onMessage} from 'firebase/messaging'
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +27,7 @@ import { locale as menuPortuguese } from 'app/menu/i18n/pt';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private messaging = getMessaging();
   coreConfig: any;
   menu: any;
   defaultLanguage: 'en'; // This language will be used as a fallback when a translation isn't found in the current language
@@ -80,6 +83,27 @@ export class AppComponent implements OnInit, OnDestroy {
     // Set the private defaults
     this._unsubscribeAll = new Subject();
   }
+  requestPermission() {
+    getToken(this.messaging, { vapidKey: environment.firebase.vapidKey }).then(
+      (currentToken) => {
+        if (currentToken) {
+          console.log('Token received:', currentToken);
+          // Envoyer le token au serveur pour l'enregistrer
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+      }).catch((err) => {
+        console.error('An error occurred while retrieving token.', err);
+      });
+  }
+
+  receiveMessage() {
+    onMessage(this.messaging, (payload) => {
+      console.log('Message received. ', payload);
+      // Gérer l'affichage de la notification ici
+    });
+  }
+
 
   // Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
@@ -88,6 +112,8 @@ export class AppComponent implements OnInit, OnDestroy {
    * On init
    */
   ngOnInit(): void {
+  this.requestPermission() ; 
+  this.receiveMessage();
     // Init wave effect (Ripple effect)
     Waves.init();
 

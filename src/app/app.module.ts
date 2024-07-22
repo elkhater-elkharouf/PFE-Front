@@ -32,6 +32,9 @@ import { BasicCustomContextMenuComponent } from "./main/extensions/context-menu/
 import { SubMenuCustomContextMenuComponent } from "./main/extensions/context-menu/custom-context-menu/sub-menu-custom-context-menu/sub-menu-custom-context-menu.component";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { ReactiveFormsModule } from "@angular/forms";
+import { initializeApp } from "firebase/app";
+import { environment } from "environments/environment";
+ initializeApp(environment.firebase )
 const appRoutes: Routes = [
   {
     path: "dashboard",

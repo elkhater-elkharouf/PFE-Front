@@ -209,80 +209,77 @@
       <!-- User Timeline & Permissions Starts -->
       <div class="row">
         <!-- information starts -->
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title mb-2">User Timeline</h4>
-            </div>
-            <div class="card-body">
-              <ul class="timeline">
-                <li class="timeline-item">
-                  <span class="timeline-point timeline-point-indicator"></span>
-                  <div class="timeline-event">
-                    <div
-                      class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1"
-                    >
-                      <h6>12 Invoices have been paid</h6>
-                      <span class="timeline-event-time">12 min ago</span>
-                    </div>
-                    <p>Invoices have been paid to the company.</p>
-                    <div class="media align-items-center">
-                      <img
-                        class="mr-1"
-                        src="assets/images/icons/file-icons/pdf.png"
-                        alt="invoice"
-                        height="23"
-                      />
-                      <div class="media-body">invoice.pdf</div>
-                    </div>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <span
-                    class="timeline-point timeline-point-warning timeline-point-indicator"
-                  ></span>
-                  <div class="timeline-event">
-                    <div
-                      class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1"
-                    >
-                      <h6>Client Meeting</h6>
-                      <span class="timeline-event-time">45 min ago</span>
-                    </div>
-                    <p>Project meeting with john @10:15am.</p>
-                    <div class="media align-items-center">
-                      <div class="avatar">
-                        <img
-                          src="assets/images/avatars/12-small.png"
-                          alt="avatar"
-                          height="38"
-                          width="38"
-                        />
+        
+          <div class="col-md-6" *ngFor="let projet of projets">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title mb-2">Project Details</h4>
+                <button class="btn btn-outline-success export-button btn-sm" (click)="exportUsers(projet.idProjet)">
+                  <i data-feather="file-text"></i>
+                </button>
+              </div>
+              <div class="card-body">
+                <ul class="timeline">
+                  <li class="timeline-item">
+                    <span class="timeline-point timeline-point-indicator"></span>
+                    <div class="timeline-event">
+                      <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                        <h6 class="text-primary">Project</h6>
                       </div>
-                      <div class="media-body ml-50">
-                        <h6 class="mb-0">John Doe (Client)</h6>
-                        <span>CEO of Infibeam</span>
+                      <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                        <p><span>Project Name : </span> {{ projet.nameProjet }}</p>
+                        <span class="timeline-event-time"> From {{ projet.dateDeb }} To {{ projet.dateFin }}</span>
+                      </div>
+                      <p>
+                        <span>Status : </span>
+                        <span *ngIf="projet.status === 0"> En Cours</span>
+                        <span *ngIf="projet.status === 1"> Pas Encore</span>
+                        <span *ngIf="projet.status === 2"> Terminé</span>
+                      </p>
+                    </div>
+                  </li>
+                  <li class="timeline-item">
+                    <span class="timeline-point timeline-point-warning timeline-point-indicator"></span>
+                    <div class="timeline-event">
+                      <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                        <h6 class="text-warning">Users</h6>
+                      </div>
+                      <p>List of users affected to this project</p>
+                      <!-- Loop through users -->
+                      <div *ngFor="let user of projet.users" class="media align-items-center">
+                        <div class="media-body ml-50">
+                          <div class="media align-items-center">
+                            <div class="avatar">
+                              <a [routerLink]="'/apps/user/user-view/' + user.idUser">
+                                <img [src]="(user.image && user.image.imagenUrl) || 'https://t3.ftcdn.net/jpg/05/53/79/60/360_F_553796090_XHrE6R9jwmBJUMo9HKl41hyHJ5gqt9oz.jpg'" alt="avatar" height="38" width="38" />
+                              </a>
+                            </div>
+                            <div class="media-body ml-50">
+                              <h6 class="mb-0">{{ user.fname }} {{ user.lname }}</h6>
+                              <span>{{ user.role.roleName }}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li class="timeline-item">
-                  <span
-                    class="timeline-point timeline-point-info timeline-point-indicator"
-                  ></span>
-                  <div class="timeline-event">
-                    <div
-                      class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1"
-                    >
-                      <h6>Create a new project for client</h6>
-                      <span class="timeline-event-time">2 days ago</span>
+                  </li>
+                  <li class="timeline-item">
+                    <span class="timeline-point timeline-point-info timeline-point-indicator"></span>
+                    <div class="timeline-event">
+                      <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
+                        <h6 class="text-info">Email</h6>
+                      </div>
+                      <!-- Mail details -->
+                      <div class="media align-items-center" *ngIf="projet.mail">
+                        <span> Address mail : <span> {{ projet.mail.username }}</span></span>
+                      </div>
                     </div>
-                    <p class="mb-0">Add files to new design folder</p>
-                  </div>
-                </li>
-              </ul>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+       
         <!-- information Ends -->
 
         <!-- User Permissions Starts -->

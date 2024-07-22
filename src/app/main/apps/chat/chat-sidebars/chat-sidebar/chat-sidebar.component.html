@@ -4,11 +4,11 @@
     <i data-feather="x"></i>
   </button>
   <!-- Sidebar header start -->
-  <div class="chat-fixed-search">
+  <div class="chat-fixed-search"  *ngIf="currentUser">
     <div class="d-flex align-items-center w-100">
       <div class="sidebar-profile-toggle">
         <button class="btn avatar avatar-border bg-transparent p-0" (click)="toggleSidebar('chat-user-sidebar')">
-          <img [src]="userProfile.avatar" alt="user_avatar" height="42" width="42" />
+          <img [src]="currentUser.image.imagenUrl" alt="user_avatar" height="42" width="42" />
           <span
             [ngClass]="{
               'avatar-status-offline': userProfile.status == 'offline',
@@ -36,57 +36,51 @@
     </div>
   </div>
   <!-- Sidebar header end -->
-
+<!-- Chat Sidebar area -->
+<div class="chat-sidebar">
   <!-- Sidebar Users start -->
   <div id="users-list" class="chat-user-list-wrapper list-group" [perfectScrollbar]>
-    <h4 class="chat-list-title">Chats</h4>
-    <ng-container *ngIf="(chatUsers | filter: searchText:'fullName').length; else noResultsChats"></ng-container>
+    <h4 class="chat-list-title">Tous les utilisateurs</h4>
     <ul class="chat-users-list chat-list media-list">
-      <li
-        *ngFor="let chatUser of chatUsers | filter: searchText:'fullName'; let i = index"
-        [class.active]="selectedIndex === i"
-        (click)="openChat(chatUser.id); toggleSidebar('chat-sidebar'); setIndex(i)"
-      >
-        <span class="avatar"
-          ><img [src]="chatUser.avatar" height="42" width="42" alt="Generic placeholder image" />
+      <li *ngFor="let user of users" (click)="openChatWithUser(user)">
+        <span class="avatar">
+          <img [src]="user.image.imagenUrl" height="42" width="42" alt="Image utilisateur" />
           <span
             [ngClass]="{
-              'avatar-status-offline': chatUser.status == 'offline',
-              'avatar-status-online': chatUser.status == 'online',
-              'avatar-status-busy': chatUser.status == 'busy',
-              'avatar-status-away': chatUser.status == 'away'
+              'avatar-status-offline': user.status === 'offline',
+              'avatar-status-online': user.status === 'online',
+              'avatar-status-busy': user.status === 'busy',
+              'avatar-status-away': user.status === 'away'
             }"
           ></span>
         </span>
         <div class="chat-info flex-grow-1">
-          <h5 class="mb-0">{{ chatUser.fullName }}</h5>
+          <h5 class="mb-0">{{ user.lname }} {{ user.fname }}</h5>
           <p class="card-text text-truncate">
-            {{ chatUser.about }}
+            {{ user.about }}
           </p>
         </div>
         <div class="chat-meta text-nowrap">
           <small class="float-right mb-25 chat-time">4:14 PM</small>
-          <span *ngIf="chatUser.unseenMsgs >= 1" class="float-right badge badge-danger badge-pill">{{
-            chatUser.unseenMsgs
-          }}</span>
+          <span *ngIf="user.unseenMsgs >= 1" class="float-right badge badge-danger badge-pill">
+            {{ user.unseenMsgs }}
+          </span>
         </div>
       </li>
 
       <ng-template #noResultsChats>
-        <li class="no-results" [ngClass]="{ show: (chatUsers | filter: searchText:'fullName').length <= 0 }">
-          <h6 class="mb-0">No Chats Found</h6>
+        <li class="no-results" [ngClass]="{ show: users.length === 0 }">
+          <h6 class="mb-0">Aucun utilisateur trouvé</h6>
         </li>
       </ng-template>
     </ul>
+
     <h4 class="chat-list-title">Contacts</h4>
     <ng-container *ngIf="(contacts | filter: searchText:'fullName').length; else noResultsContacts"></ng-container>
     <ul class="chat-users-list contact-list media-list">
-      <li
-        *ngFor="let contact of contacts | filter: searchText:'fullName'"
-        (click)="openChat(contact.id); toggleSidebar('chat-sidebar')"
-      >
-        <span class="avatar"
-          ><img [src]="contact.avatar" height="42" width="42" alt="Generic placeholder image" />
+      <li *ngFor="let contact of contacts | filter: searchText:'fullName'" (click)="openChat(contact.id); toggleSidebar('chat-sidebar')">
+        <span class="avatar">
+          <img [src]="contact.avatar" height="42" width="42" alt="Image contact" />
         </span>
         <div class="chat-info">
           <h5 class="mb-0">{{ contact.fullName }}</h5>
@@ -97,8 +91,8 @@
       </li>
 
       <ng-template #noResultsContacts>
-        <li class="no-results" [ngClass]="{ show: (contacts | filter: searchText:'fullName').length <= 0 }">
-          <h6 class="mb-0">No Contacts Found</h6>
+        <li class="no-results" [ngClass]="{ show: (contacts | filter: searchText:'fullName').length === 0 }">
+          <h6 class="mb-0">Aucun contact trouvé</h6>
         </li>
       </ng-template>
     </ul>

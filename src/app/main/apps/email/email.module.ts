@@ -22,6 +22,13 @@ import { EmailService } from 'app/main/apps/email/email.service';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { FileUploadModule } from 'ng2-file-upload';
+import { FormWizardComponent } from 'app/main/forms/form-wizard/form-wizard.component';
+import { FormElementsModule } from 'app/main/forms/form-elements/form-elements.module';
+import { FormLayoutModule } from 'app/main/forms/form-layout/form-layout.module';
+import { FormRepeaterModule } from 'app/main/forms/form-repeater/form-repeater.module';
+import { FormValidationModule } from 'app/main/forms/form-validation/form-validation.module';
+import { FormWizardModule } from 'app/main/forms/form-wizard/form-wizard.module';
 
 // routing
 const routes: Routes = [
@@ -69,6 +76,7 @@ const routes: Routes = [
     CoreSidebarModule,
     EditorModule,
     FormsModule,
+    FileUploadModule,
   ],
   providers: [EmailService]
 })

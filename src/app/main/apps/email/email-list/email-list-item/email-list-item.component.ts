@@ -10,12 +10,19 @@ import * as XLSX from "xlsx"
 import { ToastrService } from "ngx-toastr";
 import * as bootstrap from 'bootstrap';
 import tinymce from "tinymce";
+import Stepper from "bs-stepper";
 @Component({
   selector: "email-list-item",
   templateUrl: "./email-list-item.component.html",
+  styleUrls: ['../email-list-item.component.css'] ,
   encapsulation: ViewEncapsulation.None,
 })
 export class EmailListItemComponent implements OnInit, AfterViewInit{
+  templateLabel:any ;
+  messageTemplate :any ;
+  contentText:any ;
+  templateObject :any ; 
+  fileName: string = 'Choose file';
   editorContent: string = '<p>Initial content</p>';
   editorConfig = {
 
@@ -47,6 +54,20 @@ export class EmailListItemComponent implements OnInit, AfterViewInit{
   }
 
 
+  private modernVerticalWizardStepper: Stepper;
+  private bsStepper;
+
+  public selectMulti = [{ name: 'English' }, { name: 'French' }, { name: 'Spanish' }];
+  public selectMultiSelected;
+
+  public selectBasic = [
+    { name: 'UK' },
+    { name: 'USA' },
+    { name: 'Spain' },
+    { name: 'France' },
+    { name: 'Italy' },
+    { name: 'Australia' }
+  ];
 
   ExcelData :any 
   displayedColumns: string[] = [];
@@ -73,7 +94,19 @@ export class EmailListItemComponent implements OnInit, AfterViewInit{
     this._unsubscribeAll = new Subject();
     
   }
-
+  
+  /**
+   * Modern Vertical Wizard Stepper Next
+   */
+  modernVerticalNext() {
+    this.modernVerticalWizardStepper.next();
+  }
+  /**
+   * Modern Vertical Wizard Stepper Previous
+   */
+  modernVerticalPrevious() {
+    this.modernVerticalWizardStepper.previous();
+  }
   uploadImage(blobInfo, success, failure) {
     const file = blobInfo.blob();
     this._userService.TelechargerImage(file).subscribe({
@@ -86,7 +119,37 @@ export class EmailListItemComponent implements OnInit, AfterViewInit{
       }
     });
   }
-  
+  saveTemplate() {
+    const emailTemplate = {
+      label: this.templateLabel, // Vous pouvez obtenir cette valeur d'un champ d'entrée
+      object: this.templateObject, // Vous pouvez obtenir cette valeur d'un champ d'entrée
+      contentHtml: this.editorContent,
+      contentText: this.contentText, // Optionnel, vous pouvez générer le texte à partir du HTML ou l'obtenir d'un autre champ d'entrée
+    };
+
+    this._userService.addTemplate(emailTemplate).subscribe(response => {
+      console.log('Template saved:', response);
+    }, error => {
+      console.error('Error saving template:', error);
+    });
+  }
+  updateFileN(event: any): void {
+    const input = event.target;
+    if (input.files.length > 0) {
+      this.fileName = input.files[0].name;
+    } else {
+      this.fileName = 'Choose file';
+    }
+  }
+  updateFileName(event) {
+    const input = event.target;
+    const label = document.getElementById('customFileLabel');
+    if (input.files.length > 0) {
+      label.textContent = input.files[0].name;
+    } else {
+      label.textContent = 'Choose file';
+    }
+  }
   ngAfterViewInit(): void {
    
     
@@ -177,49 +240,113 @@ export class EmailListItemComponent implements OnInit, AfterViewInit{
   canSubmit(): boolean {
     return this.generalFile !== null && this.excelFile !== null;
   }
-  onSubmit(): void {
-    if (!this.canSubmit()) {
-      alert("Please upload both files.");
-      return;
-    }
+  saveTemplateLocally(): void {
+    const template = {
+        label: this.templateLabel,
+        object: this.templateObject,
+        content: this.contentText,
+        editorContent: this.editorContent
+    };
 
+    // Save the template to local storage or backend
+    localStorage.setItem('savedTemplate', JSON.stringify(template));
+    // If you want to save it to a backend, you can create a new service method to handle it
+    // this._userService.saveTemplateToBackend(template).subscribe(...);
+}
+  onSubmit(): void {
+/*     if (!this.canSubmit()) {
+        alert("Please upload both files.");
+        return;
+    } */
+
+     
+      
     const formData = new FormData();
     let fileName = "";
- // Ajouter les données Excel modifiées en tant que fichier Blob
- const ws = XLSX.utils.json_to_sheet(this.ExcelData);
- const wb = XLSX.utils.book_new();
- XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
- const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
- const blob = new Blob([this.s2ab(wbout)], { type: 'application/octet-stream' });
-
- formData.append("excelFile", blob, 'modifiedExcel.xlsx');
-    formData.append("excelFile", this.excelFile);
-
-    if (this.selectedFileType === "word") {
-      fileName = "wordTemplate";
-    } else if (this.selectedFileType === "ppt") {
-      fileName = "pptTTemplate";
-    }
-
-    formData.append(fileName, this.generalFile);
-
-    this._userService
-      .exportFileFromExcel(formData, this.selectedFileType)
-      .subscribe({
+    if (this.selectedFileType === "sms") {
+      const messageTemplate = this.messageTemplate;
+      const ws = XLSX.utils.json_to_sheet(this.ExcelData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+      const blob = new Blob([this.s2ab(wbout)], { type: 'application/octet-stream' });
+    
+      formData.append('file', blob, 'modifiedExcel.xlsx');
+      formData.append('messageTemplate', messageTemplate);
+    
+      this._userService.sendSms(formData).subscribe({
         next: () => {
-          console.log("File conversion successful");
-          
+          console.log('SMS sent successfully');
+          this.toastr.success('SMS sent successfully');
         },
         error: (error) => {
-          console.error("Error during file conversion:", error);
-          alert("Failed to convert file.");
-        },
-        complete: () => {
-          console.log("File conversion process completed.");
-        },
-      });
-      
-  }
+          console.error('Error during SMS sending:', error);
+          this.toastr.error('Failed to send SMS');
+        }
+      });}
+    else if(this.selectedFileType === "html") {
+      const ws = XLSX.utils.json_to_sheet(this.ExcelData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+      const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+      const blob = new Blob([this.s2ab(wbout)], { type: 'application/octet-stream' });
+
+      formData.append("excelFile", blob, 'modifiedExcel.xlsx');
+      formData.append("excelFile", this.excelFile);
+
+      formData.append(fileName, this.generalFile);
+      // Handling HTML specific submission
+      formData.append("excelFile", this.excelFile);
+      const templateLabel = encodeURIComponent(this.templateLabel);
+         // Save the template locally
+         this.saveTemplateLocally();
+      this._userService.sendHtmlTemplate(formData, templateLabel)
+          .subscribe({
+              next: () => {
+                  console.log("HTML Template submission successful");
+              },
+              error: (error) => {
+                  console.error("Error during HTML template submission:", error);
+                  alert("Failed to submit HTML template.");
+              },
+              complete: () => {
+                  console.log("HTML template submission process completed.");
+              },
+          });
+  }  else {
+        // Handling Word/PPT specific submission
+        const ws = XLSX.utils.json_to_sheet(this.ExcelData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        const blob = new Blob([this.s2ab(wbout)], { type: 'application/octet-stream' });
+
+        formData.append("excelFile", blob, 'modifiedExcel.xlsx');
+        formData.append("excelFile", this.excelFile);
+
+        if (this.selectedFileType === "word") {
+            fileName = "wordTemplate";
+        } else if (this.selectedFileType === "ppt") {
+            fileName = "pptTemplate";
+        }
+
+        formData.append(fileName, this.generalFile);
+
+        this._userService.exportFileFromExcel(formData, this.selectedFileType)
+            .subscribe({
+                next: () => {
+                    console.log("File conversion successful");
+                },
+                error: (error) => {
+                    console.error("Error during file conversion:", error);
+                    alert("Failed to convert file.");
+                },
+                complete: () => {
+                    console.log("File conversion process completed.");
+                },
+            });
+    }
+}
 
   async ReadExcel(event: any) {
     try {
@@ -342,6 +469,18 @@ calculateInputWidth(value: any): number {
 
 
   ngOnInit(): void {
+
+
+
+    this.modernVerticalWizardStepper = new Stepper(document.querySelector('#stepper4'), {
+      linear: false,
+      animation: true
+    });
+
+    this.bsStepper = document.querySelectorAll('.bs-stepper');
+
+
+
 
     const savedExcelBlob = localStorage.getItem('modifiedExcelBlob');
     if (savedExcelBlob) {

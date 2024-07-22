@@ -7,7 +7,7 @@ import { EmailService } from 'app/main/apps/email/email.service';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
-  styleUrls: ['./email.component.scss'],
+  styleUrls: ['./email.component.scss','./email-list/email-list-item.component.css'],
   encapsulation: ViewEncapsulation.None,
   host: { class: 'email-application' }
 })

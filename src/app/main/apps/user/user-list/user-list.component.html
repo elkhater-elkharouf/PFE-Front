@@ -66,6 +66,7 @@
                 </select>
                 entries</label
               >
+              
             </div>
           </div>
           <div
@@ -260,7 +261,21 @@
             </ng-template>
           </ngx-datatable-column>
         </ngx-datatable>
+        <ngb-pagination style="margin-left: 37%; margin-top: -4%;" 
+        [collectionSize]="collectionSize" 
+        [(page)]="pageAdvancedEllipses" 
+        [pageSize]="selectedOption"
+        [maxSize]="5" 
+        [rotate]="true" 
+        [boundaryLinks]="true" 
+        (pageChange)="loadUsers()">
+        <ng-template ngbPaginationFirst>First</ng-template>
+        <ng-template ngbPaginationPrevious><span [data-feather]="'chevron-left'" [class]="'font-weight-bolder'"></span>Prev</ng-template>
+        <ng-template ngbPaginationNext>Next<span [data-feather]="'chevron-right'" [class]="'font-weight-bolder'"></span></ng-template>
+        <ng-template ngbPaginationLast>Last</ng-template>
+    </ngb-pagination>
       </div>
+      
     </section>
     <!--/ User List -->
   </div>
@@ -271,6 +286,7 @@
     name="new-user-sidebar"
     overlayClass="modal-backdrop"
   >
+  
     <app-new-user-sidebar></app-new-user-sidebar>
   </core-sidebar>
   <!--/ New User Sidebar -->

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 
 import { CoreConfigService } from '@core/services/config.service';
 import { UserService } from 'services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-auth-forgot-password-v2',
@@ -30,7 +31,7 @@ export class AuthForgotPasswordV2Component implements OnInit {
    * @param {FormBuilder} _formBuilder
    *
    */
-  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: UntypedFormBuilder , private userSerive:UserService) {
+  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: UntypedFormBuilder , private userSerive:UserService, private toastr: ToastrService) {
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
@@ -71,10 +72,11 @@ export class AuthForgotPasswordV2Component implements OnInit {
         this.userSerive.forgetPassword(email).subscribe(
           (response) => {
             console.log('Password reset link sent:', response);
-            
+            this.toastr.success('Password reset link sent successfully', 'Success');
           },
           (error) => {
             console.error('Error sending password reset link:', error);
+            this.toastr.error('Failed to send password reset link', 'Error');
           }
         );
       }

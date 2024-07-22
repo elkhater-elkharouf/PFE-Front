@@ -19,10 +19,14 @@ import { UserService } from "services/user.service";
   encapsulation: ViewEncapsulation.None,
 })
 export class UserListComponent implements OnInit {
+  public pageAdvancedEllipses = 1;
+  public selectedOption = 2;
+  public collectionSize = 0;
+  public totalPages = 0;
   // Public
   public sidebarToggleRef = false;
   public rows;
-  public selectedOption = 10;
+
   public ColumnMode = ColumnMode;
   public temp = [];
   public previousRoleFilter = "";
@@ -111,14 +115,29 @@ export class UserListComponent implements OnInit {
    * @param event
    */
   filterByRole(event) {
-    const filter = event ? event.value : "";
-    this.previousRoleFilter = filter;
-    this.temp = this.filterRows(
-      filter,
-      this.previousDepartmentFilter,
-      this.previousStatusFilter
-    );
-    this.rows = this.temp;
+    const selectedRole = event ? event.value : "";
+    
+    // Set selectedRole to empty string if "All" is selected to retrieve all users
+    if (selectedRole === "All") {
+      this.loadUsers();
+    } else {
+      this.selectedRole = selectedRole;
+      this._userService.getUsersByRole(this.selectedRole.toString()).subscribe(
+        (users) => {
+          this.tempData = users;
+          this.temp = this.filterRows(
+            selectedRole,
+            this.previousDepartmentFilter,
+            this.previousStatusFilter
+          );
+          this.rows = this.temp;
+        },
+        (error) => {
+          console.error('Error fetching users by role', error);
+          // Gérer l'erreur ou afficher un message à l'utilisateur
+        }
+      );
+    }
   }
 
   /**
@@ -127,15 +146,31 @@ export class UserListComponent implements OnInit {
    * @param event
    */
   filterByDepartment(event) {
-    const filter = event ? event.value : "";
-    this.previousDepartmentFilter = filter;
-    this.temp = this.filterRows(
-      this.previousRoleFilter,
-      filter,
-      this.previousStatusFilter
-    );
-    this.rows = this.temp;
+    const selectedDepartment = event ? event.value : "";
+    
+    // Set selectedDepartment to empty string if "All" is selected to retrieve all users
+    if (selectedDepartment === "All") {
+      this.loadUsers();
+    } else {
+      this.previousDepartmentFilter = selectedDepartment;
+      this._userService.getUsersByDepartment(selectedDepartment).subscribe(
+        (users) => {
+          this.tempData = users;
+          this.temp = this.filterRows(
+            this.previousRoleFilter,
+            selectedDepartment,
+            this.previousStatusFilter
+          );
+          this.rows = this.temp;
+        },
+        (error) => {
+          console.error('Error fetching users by department', error);
+          // Handle error or show message to user
+        }
+      );
+    }
   }
+
 
   /**
    * Filter By Status
@@ -143,15 +178,35 @@ export class UserListComponent implements OnInit {
    * @param event
    */
   filterByStatus(event) {
-    const filter = event ? event.value : "";
-    this.previousStatusFilter = filter;
-    this.temp = this.filterRows(
-      this.previousRoleFilter,
-      this.previousDepartmentFilter,
-      filter
-    );
-    this.rows = this.temp;
+    const selectedStatus = event ? event.value : "";
+    this.previousStatusFilter = selectedStatus;
+  
+    // Convert selectedStatus to a boolean for active/inactive
+    const isActive = selectedStatus === "Active" ? true : selectedStatus === "Inactive" ? false : null;
+  
+    // Call your service method to fetch users by status if a valid status is selected
+    if (isActive !== null) {
+      this._userService.getUsersByStatus(isActive).subscribe(
+        (users) => {
+          this.tempData = users;
+          this.temp = this.filterRows(
+            this.previousRoleFilter,
+            this.previousDepartmentFilter,
+            selectedStatus
+          );
+          this.rows = this.temp;
+        },
+        (error) => {
+          console.error('Error fetching users by status', error);
+          // Handle error or show message to user
+        }
+      );
+    } else {
+      // If 'All' or invalid status is selected, fetch all users
+      this.loadUsers();
+    }
   }
+  
 
   /**
    * Filter Rows
@@ -197,29 +252,15 @@ export class UserListComponent implements OnInit {
    * On init
    */
   ngOnInit(): void {
-    // Subscribe config change
     this._coreConfigService.config
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
-        //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)
         if (config.layout.animation === "zoomIn") {
           setTimeout(() => {
-            this._userListService.onUserListChanged
-              .pipe(takeUntil(this._unsubscribeAll))
-              .subscribe((response) => {
-                console.log(response);
-                this.rows = response;
-                this.tempData = this.rows;
-              });
+            this.loadUsers();
           }, 450);
         } else {
-          this._userListService.onUserListChanged
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-              console.log(response);
-              this.rows = response;
-              this.tempData = this.rows;
-            });
+          this.loadUsers();
         }
       });
     // Récupérer la liste des rôles
@@ -254,6 +295,21 @@ export class UserListComponent implements OnInit {
       ];
     });
   }
+  loadUsers() {
+    this._userListService
+      .getDataTableRows(this.pageAdvancedEllipses - 1, this.selectedOption, "idUser,asc")
+      .then((response) => {
+        if (response && response.content) {
+          this.rows = response.content;
+          this.collectionSize = response.totalElements;
+          this.totalPages = response.totalPages;
+          this.tempData = this.rows;
+        } else {
+          console.error("Invalid data format received", response);
+        }
+      });
+  }
+
 
   /**
    * On destroy

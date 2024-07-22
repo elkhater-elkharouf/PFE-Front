@@ -45,10 +45,10 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": ["src/favicon.ico", "src/assets","src/manifest.json", "src/firebase-messaging-sw.js"],
             "styles": [
               "src/styles.scss",
-              "src/app/main/apps/email/email-list/email-list-item.component.css",
+            
               "node_modules/highlight.js/scss/atom-one-dark.scss",
               "src/assets/fonts/feather/iconfont.css",
               "src/assets/fonts/font-awesome/css/font-awesome.min.css",

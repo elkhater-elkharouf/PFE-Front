@@ -1,122 +1,163 @@
-<!-- <li
-  class="media"
-  [ngClass]="{
-    'mail-read': email.isRead === true,
-    'selected-row-bg': selected === true
-  }"
->
-  <div class="media-left pr-50">
-    <div class="avatar">
-      <img [src]="email.from.avatar" alt="avatar img holder" />
-    </div>
-    <div class="user-action">
-      <div class="custom-control custom-checkbox">
-        <input
-          type="checkbox"
-          class="custom-control-input"
-          id="customCheck{{ email.id }}"
-          name="customCheck{{ email.id }}"
-          [(ngModel)]="selected"
-          (ngModelChange)="onSelectedChange()"
-          (click)="$event.stopPropagation()"
-        />
-        <label
-          class="custom-control-label"
-          for="customCheck{{ email.id }}"
-        ></label>
-      </div>
-      <button
-        class="email-favorite btn p-0"
-        (click)="toggleStarred(); $event.stopPropagation()"
-      >
-        <i
-          class="fa"
-          [ngClass]="{
-            'fa-star text-warning': email.isStarred === true,
-            'fa-star-o': email.isStarred === false
-          }"
-        ></i>
-      </button>
-    </div>
-  </div>
-  <div class="media-body">
-    <div class="mail-details">
-      <div class="mail-items">
-        <h5 class="mb-25">{{ email.from.name }}</h5>
-        <span class="text-truncate">{{ email.subject }}</span>
-      </div>
-      <div class="mail-meta-item">
-        <ng-container *ngIf="email.attachments.length > 0">
-          <i data-feather="paperclip"></i>
-        </ng-container>
-        <span
-          class="mx-50 bullet bullet-sm"
-          *ngFor="let label of email.labels"
-          [ngClass]="{
-            'bullet-success': label === 'personal',
-            'bullet-primary': label === 'company',
-            'bullet-warning': label === 'important',
-            'bullet-danger': label === 'private'
-          }"
-        ></span>
-        <span class="mail-date">{{ email.time | date : "short" : "UTC" }}</span>
-      </div>
-    </div>
-    <div class="mail-message">
-      <p class="text-truncate mb-0">{{ email.message | striphtml }}</p>
-    </div>
-  </div>
-</li> -->
-<div class="container mt-5">
-  <div class="dropdown col-4 float-md-right pb-5">
-    <button class="btn btn-success mb-5 dropdown-toggle" type="button" id="dropdownMenuButton"
-      data-mdb-toggle="dropdown" aria-expanded="false"><i data-feather="file-text"></i>
-      Export to Excel by :
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <li><a class="dropdown-item" href="#" id="allUsers">All Users</a></li>
-      <li><a class="dropdown-item" href="#" id="byProject">By Project</a></li>
-      <li>
-        <a class="dropdown-item" href="#">By Department &raquo;</a>
-        <ul class="dropdown-menu dropdown-submenu">
-          <li><a class="dropdown-item" href="#" id="departmentMC">MC</a></li>
-          <li><a class="dropdown-item" href="#" id="departmentSE">SE</a></li>
-          <li><a class="dropdown-item" href="#" id="departmentFinance">Finance</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+<div class="content-wrapper container-xxl">
+  <div class="content-body">
+    <section class="vertical-wizard">
+      <div id="stepper4" class="bs-stepper vertical vertical-wizard-example">
+        <div class="bs-stepper-header">
+          <div class="step" data-target="#account-details-vertical-modern">
+            <button type="button" class="step-trigger">
+              <span class="bs-stepper-box">
+                <i data-feather="file-text" class="font-medium-3"></i>
+              </span>
+              <span class="bs-stepper-label">
+                <span class="bs-stepper-title">Select File Type</span>
+                <span class="bs-stepper-subtitle">Choose File Type</span>
+              </span>
+            </button>
+          </div>
+          <div class="step" data-target="#personal-info-vertical-modern">
+            <button type="button" class="step-trigger">
+              <span class="bs-stepper-box">
+                <i data-feather="user" class="font-medium-3"></i>
+              </span>
+              <span class="bs-stepper-label">
+                <span class="bs-stepper-title">Upload Files</span>
+                <span class="bs-stepper-subtitle">Upload Word/PPT/Excel</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="bs-stepper-content">
+          <!-- Step 1: Select File Type -->
+          <div id="account-details-vertical-modern" class="content">
+            <div class="content-header">
+              <div class="dropdown col-4 float-md-right pb-5">
+                <button class="btn btn-success mb-5 dropdown-toggle gg" type="button" id="dropdownMenuButton"
+                  data-mdb-toggle="dropdown" aria-expanded="false">
+                  <i data-feather="file-text"></i>
+                  Export to Excel by :
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" href="#" id="allUsers">All Users</a></li>
+                  <li><a class="dropdown-item" href="#" id="byProject">By Project</a></li>
+                  <li>
+                    <a class="dropdown-item" href="#">By Department &raquo;</a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li><a class="dropdown-item" href="#" id="departmentMC">MC</a></li>
+                      <li><a class="dropdown-item" href="#" id="departmentSE">SE</a></li>
+                      <li><a class="dropdown-item" href="#" id="departmentFinance">Finance</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+              <h5 class="mb-0">Select File Type</h5>
+              <small class="text-muted">Choose the type of file you want to work with.</small>
+            </div>
+            <div class="form-group">
+              <label for="fileType">Select File Type:</label>
+              <select class="form-control w-50" id="fileType" [(ngModel)]="selectedFileType" name="fileType" (change)="updateFileAccept()">
+                <option value="word">Word</option>
+                <option value="ppt">PowerPoint</option>
+                <option value="html">HTML</option>
+                <option value="sms">SMS</option>
 
-  <div class="row justify-content-between mt-5">
-    <div class="col-12">
-      <form (submit)="onSubmit()">
-        <div class="form-group">
-          <label for="fileType">Select File Type:</label>
-          <select class="form-control w-50" id="fileType" [(ngModel)]="selectedFileType" name="fileType"
-            (change)="updateFileAccept()">
-            <option value="word">Word</option>
-            <option value="ppt">PowerPoint</option>
-          </select>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <div class="form-group">
-              <label for="generalFileInput">Upload Word/PPT File:</label>
-              <input type="file" class="form-control-file" id="generalFileInput" [attr.accept]="fileAccept"
-                (change)="onFileSelect($event, 'general')" />
+              </select>
+            </div>
+            <div class="buttons-container">
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-secondary btn-prev" disabled rippleEffect>
+                  <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                  <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                </button>
+                <button class="btn btn-primary btn-next align-right" (click)="modernVerticalNext()" rippleEffect>
+                  <span class="align-middle d-sm-inline-block d-none">Next</span>
+                  <i data-feather="arrow-right" class="align-middle ml-sm-25 ml-0"></i>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="col-6">
-            <div class="form-group">
-              <label for="excelFile">Upload Excel File:</label>
-              <input type="file" class="form-control-file" id="excelFile" accept=".xls,.xlsx"
-                (change)="onFileSelect($event, 'excel'); ReadExcel($event); openModal();" />
+          
+          <!-- Step 2: Upload Files -->
+          <div id="personal-info-vertical-modern" class="content">
+            <div class="content-header">
+              <h5 class="mb-0">Upload Files</h5>
+              <small>Upload Word/PPT/Excel files as needed.</small>
+            </div>
+            <div class="row" *ngIf="selectedFileType === 'word' || selectedFileType === 'ppt'">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="generalFileInput">Upload Word/PPT File:</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="generalFileInput" [attr.accept]="fileAccept" (change)="onFileSelect($event, 'general'); updateFileN($event)" />
+                    <label class="custom-file-label" for="generalFileInput">{{ fileName }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="customFile">Upload Excel File:</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" accept=".xls,.xlsx" (change)="onFileSelect($event, 'excel'); ReadExcel($event); openModal(); updateFileName($event);" />
+                    <label class="custom-file-label" for="customFile" id="customFileLabel">Choose file</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="selectedFileType === 'html'">
+              <div class="col-xl-4 col-md-6 col-12 mb-1">
+                <div class="form-group">
+                  <label for="basicInput">Template Label:</label>
+                  <input type="text" [(ngModel)]="templateLabel" class="form-control" placeholder="Enter template label" />
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6 col-12 mb-1">
+                <div class="form-group">
+                  <label for="basicInput">Template Object:</label>
+                  <input type="text" [(ngModel)]="templateObject" class="form-control" placeholder="Enter template object" />
+                </div>
+              </div>
+              <div class="col-xl-4 col-md-6 col-12 mb-1">
+                <div class="form-group">
+                  <label for="basicInput">Content Text:</label>
+                  <input type="text" [(ngModel)]="contentText" class="form-control" placeholder="Enter content text" />
+                </div>
+              </div>
+              <div class="col-12">
+                <div style="margin: 0px">
+                  <h2>WYSIWYG Editor</h2>
+                  <editor apiKey="w5ylcwyk9jqertk52z5ubs1iwzvckchm4u4m35yeoz9z177h" [(ngModel)]="editorContent" [init]="editorConfig" (ngModelChange)="onEditorChange($event)"></editor>
+                </div>
+                <div style="margin: 20px; overflow-x: auto; max-width: 100%;">
+                  <h2>HTML Content</h2>
+                  <pre style="white-space: pre-wrap; word-wrap: break-word;">{{ editorContent }}</pre>
+                </div>
+                <button class="btn btn-outline-primary" rippleEffect (click)="saveTemplate()">Save Template</button>
+              </div>
+            </div>
+            <div class="row" *ngIf="selectedFileType === 'sms'">
+              <div class="col-12">
+                <fieldset class="form-label-group">
+                  <textarea class="form-control" id="label-textarea" rows="3" placeholder="Write your message" [(ngModel)]="messageTemplate" name="messageTemplate"></textarea>
+                  <label for="label-textarea">Write your message</label>
+                </fieldset>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-primary btn-prev" (click)="modernVerticalPrevious()" rippleEffect>
+                <i data-feather="arrow-left" class="align-middle mr-sm-25 mr-0"></i>
+                <span class="align-middle d-sm-inline-block d-none">Previous</span>
+              </button>
+              <button class="btn btn-success btn-submit" rippleEffect (click)="onSubmit()">Submit</button>
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">Submit</button>
-      </form>
-    </div>
+      </div>
+    </section>
   </div>
 </div>
 
@@ -139,11 +180,10 @@
             <tr *ngFor="let data of ExcelData; let rowIndex = index">
               <td *ngFor="let col of displayedColumns; let colIndex = index">
                 <div *ngIf="!isEditingCell(rowIndex, colIndex)">
-                  <span (click)="startEdit(data, rowIndex, colIndex)">{{ data[col] || ' '}}</span>
+                  <span (click)="startEdit(data, rowIndex, colIndex)">{{ data[col] || ' ' }}</span>
                 </div>
                 <div *ngIf="isEditingCell(rowIndex, colIndex)" class="khater">
-                  <input [(ngModel)]="data[col]" (blur)="stopEdit()"
-                    [style.width.px]="calculateInputWidth(data[col])" />
+                  <input [(ngModel)]="data[col]" (blur)="stopEdit()" [style.width.px]="calculateInputWidth(data[col])" />
                 </div>
               </td>
             </tr>
@@ -151,25 +191,9 @@
         </table>
         <button class="btn btn-outline-primary btn-custom" rippleEffect (click)="addEmptyRow()">Add Row</button>
         <button class="btn btn-outline-primary btn-custom" rippleEffect (click)="promptAddColumn()">Add Column</button>
-        
       </div>
     </div>
   </div>
 </div>
 
 
-
-<div style="margin: 20px">
-  <h2>WYSIWYG Editor</h2>
-  <editor
-    apiKey="w5ylcwyk9jqertk52z5ubs1iwzvckchm4u4m35yeoz9z177h"
-    [(ngModel)]="editorContent"
-    [init]="editorConfig"
-    (ngModelChange)="onEditorChange($event)"
-  ></editor>
-</div>
-
-<div style="margin: 20px">
-  <h2>HTML Content</h2>
-  <pre>{{ editorContent }}</pre>
-</div>

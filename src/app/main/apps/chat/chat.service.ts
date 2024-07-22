@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { BehaviorSubject, Observable } from 'rxjs';
+
 
 @Injectable()
 export class ChatService {
@@ -33,13 +34,6 @@ export class ChatService {
     this.onUserProfileChange = new BehaviorSubject([]);
   }
 
-  /**
-   * Resolver
-   *
-   * @param {ActivatedRouteSnapshot} route
-   * @param {RouterStateSnapshot} state
-   * @returns {Observable<any> | Promise<any> | any}
-   */
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
     return new Promise<void>((resolve, reject) => {
       Promise.all([
@@ -54,9 +48,6 @@ export class ChatService {
     });
   }
 
-  /**
-   * Get Contacts
-   */
   getContacts(): Promise<any[]> {
     const url = `api/chat-contacts`;
 
@@ -69,9 +60,6 @@ export class ChatService {
     });
   }
 
-  /**
-   * Get Chats
-   */
   getChats(): Promise<any[]> {
     const url = `api/chat-chats`;
 
@@ -79,15 +67,11 @@ export class ChatService {
       this._httpClient.get(url).subscribe((response: any) => {
         this.chats = response;
         this.onChatsChange.next(this.chats);
-
         resolve(this.chats);
       }, reject);
     });
   }
 
-  /**
-   * Get User Profile
-   */
   getUserProfile(): Promise<any[]> {
     const url = `api/chat-profileUser`;
 
@@ -100,21 +84,12 @@ export class ChatService {
     });
   }
 
-  /**
-   * Get Selected Chat User
-   *
-   * @param userId
-   */
   getSelectedChatUser(userId) {
     const selectUser = this.contacts.find(contact => contact.id === userId);
     this.selectedChatUser = selectUser;
-
     this.onSelectedChatUserChange.next(this.selectedChatUser);
   }
 
-  /**
-   * Get Active Chats
-   */
   getActiveChats() {
     const chatArr = this.chats.filter(chat => {
       return this.contacts.some(contact => {
@@ -123,9 +98,6 @@ export class ChatService {
     });
   }
 
-  /**
-   * Get Chat Users
-   */
   getChatUsers() {
     const contactArr = this.contacts.filter(contact => {
       return this.chats.some(chat => {
@@ -136,23 +108,14 @@ export class ChatService {
     this.onChatUsersChange.next(this.chatUsers);
   }
 
-  /**
-   * Selected Chats
-   *
-   * @param id
-   */
   selectedChats(id) {
     const selectChat = this.chats.find(chat => chat.userId === id);
 
-    // If Chat is Avaiable of Selected Id
     if (selectChat !== undefined) {
       this.selectedChat = selectChat;
-
       this.onSelectedChatChange.next(this.selectedChat);
       this.getSelectedChatUser(id);
-    }
-    // Else Create New Chat
-    else {
+    } else {
       const newChat = {
         userId: id,
         unseenMsgs: 0
@@ -162,12 +125,6 @@ export class ChatService {
     }
   }
 
-  /**
-   * Create New Chat
-   *
-   * @param id
-   * @param chat
-   */
   createNewChat(id, chat) {
     const newChat = {
       userId: id,
@@ -188,22 +145,12 @@ export class ChatService {
     }
   }
 
-  /**
-   * Open Chat
-   *
-   * @param id
-   */
   openChat(id) {
     this.isChatOpen = true;
     this.onChatOpenChange.next(this.isChatOpen);
     this.selectedChats(id);
   }
 
-  /**
-   * Update Chat
-   *
-   * @param chats
-   */
   updateChat(chats) {
     return new Promise<void>((resolve, reject) => {
       this._httpClient.post('api/chat-chats/' + chats.id, { ...chats }).subscribe(() => {
@@ -213,13 +160,25 @@ export class ChatService {
     });
   }
 
-  /**
-   * Update User Profile
-   *
-   * @param userProfileRef
-   */
   updateUserProfile(userProfileRef) {
     this.userProfile = userProfileRef;
     this.onUserProfileChange.next(this.userProfile);
+  }
+  getUserFromToken(): Observable<any> {
+    // Récupérer l'accessToken depuis le localStorage
+    const accessToken = localStorage.getItem('accessToken');
+
+    // Vérifier si l'accessToken existe
+    if (!accessToken) {
+      throw new Error('AccessToken not found in localStorage');
+    }
+
+    // Définir les en-têtes avec l'accessToken
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+
+    // Effectuer la requête GET vers l'API pour récupérer le currentUser
+    return this._httpClient.get("/USER-SERVICE/currentUser", { headers });
   }
 }
